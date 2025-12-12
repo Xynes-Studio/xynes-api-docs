@@ -1,0 +1,22 @@
+---
+title: GET /workspaces/:workspaceId/documents/:id
+description: API documentation for docs.document.read
+---
+
+# GET /workspaces/:workspaceId/documents/:id
+
+**Action Key:** `docs.document.read`
+
+**Service:** `doc-service`
+
+## Permissions
+
+**Required Capability:** `docs.document.read`
+
+## Example Request
+
+```bash
+curl -X GET "https://api.xynes.com/workspaces/{workspaceId}/documents/{id}" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```

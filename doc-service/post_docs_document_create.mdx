@@ -1,0 +1,25 @@
+---
+title: POST /workspaces/:workspaceId/documents
+description: API documentation for docs.document.create
+---
+
+# POST /workspaces/:workspaceId/documents
+
+**Action Key:** `docs.document.create`
+
+**Service:** `doc-service`
+
+## Permissions
+
+**Required Capability:** `docs.document.create`
+
+## Example Request
+
+```bash
+curl -X POST "https://api.xynes.com/workspaces/{workspaceId}/documents" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -d '{
+    "foo": "bar"
+  }'
+```

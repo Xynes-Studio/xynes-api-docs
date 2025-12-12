@@ -1,0 +1,25 @@
+---
+title: POST /workspaces/:workspaceId/content-types/:contentTypeId/entries
+description: API documentation for cms.blog_entry.create
+---
+
+# POST /workspaces/:workspaceId/content-types/:contentTypeId/entries
+
+**Action Key:** `cms.blog_entry.create`
+
+**Service:** `cms-core`
+
+## Permissions
+
+**Required Capability:** `cms.blog_entry.create`
+
+## Example Request
+
+```bash
+curl -X POST "https://api.xynes.com/workspaces/{workspaceId}/content-types/{contentTypeId}/entries" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -d '{
+    "foo": "bar"
+  }'
+```

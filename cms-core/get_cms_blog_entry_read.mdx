@@ -1,0 +1,22 @@
+---
+title: GET /workspaces/:workspaceId/content-types/:contentTypeId/entries
+description: API documentation for cms.blog_entry.read
+---
+
+# GET /workspaces/:workspaceId/content-types/:contentTypeId/entries
+
+**Action Key:** `cms.blog_entry.read`
+
+**Service:** `cms-core`
+
+## Permissions
+
+**Required Capability:** `cms.blog_entry.read`
+
+## Example Request
+
+```bash
+curl -X GET "https://api.xynes.com/workspaces/{workspaceId}/content-types/{contentTypeId}/entries" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
