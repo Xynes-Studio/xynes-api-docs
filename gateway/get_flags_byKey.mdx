@@ -1,0 +1,135 @@
+```mdx
+---
+title: GET /flags/:key
+description: API documentation for gateway.flags.getByKey
+---
+
+# GET /flags/:key
+
+**Action Key:** `gateway.flags.getByKey`
+
+**Service:** `gateway`
+
+## Permissions
+
+� Mixed - Depends on the flag being accessed
+
+- **Public flags:** Accessible without authentication (OAuth, maintenance mode)
+- **Private flags:** Requires valid JWT Bearer token
+
+## Description
+
+Retrieve a specific feature flag by key. Returns the flag's enabled state and optional variant for multivariate flags (A/B tests).
+
+- **Public flags** can be accessed without authentication - useful for login page rendering
+- **Private flags** require authentication and return 401 if no valid token is provided
+
+## Example Request
+
+### Public Flag (No Auth Required)
+
+```bash
+curl -X GET "https://api.xynes.com/flags/enableOAuthGoogle" \
+  -H "Content-Type: application/json"
+```
+
+### Private Flag (Auth Required)
+
+```bash
+curl -X GET "https://api.xynes.com/flags/enableMFA" \
+  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>" \
+  -H "Content-Type: application/json"
+```
+
+## Path Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `key` | `string` | Yes | The feature flag key to retrieve |
+
+## Headers
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `Authorization` | `string` | For private flags | Bearer token in format `Bearer <token>` |
+| `X-XS-Workspace-Id` | `string` | No | Workspace ID for context (authenticated requests only) |
+
+## Response
+
+### Success (200) - Boolean Flag
+
+```json
+{
+  "key": "enableMFA",
+  "enabled": false,
+  "variant": null
+}
+```
+
+### Success (200) - Multivariate Flag
+
+For flags with A/B test variants:
+
+```json
+{
+  "key": "checkoutFlow",
+  "enabled": true,
+  "variant": "variant-b"
+}
+```
+
+### Response Schema
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `key` | `string` | The flag key that was evaluated |
+| `enabled` | `boolean` | Whether the flag is enabled for this user |
+| `variant` | `string \| null` | Variant key for multivariate flags, or `null` for boolean flags |
+
+### Error (401) - Private Flag Without Auth
+
+```json
+{
+  "ok": false,
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Flag 'enableMFA' requires authentication"
+  }
+}
+```
+
+## Public Flags (No Auth Required)
+
+| Flag Key | Default | Description |
+|----------|---------|-------------|
+| `enableOAuthGoogle` | `true` | Google OAuth login availability |
+| `enableOAuthGitHub` | `true` | GitHub OAuth login availability |
+| `enableOAuthApple` | `false` | Apple OAuth login availability |
+| `maintenanceMode` | `false` | Platform maintenance mode |
+| `enablePasswordReset` | `true` | Password reset functionality |
+
+## Private Flags (Auth Required)
+
+| Flag Key | Default | Description |
+|----------|---------|-------------|
+| `enableMFA` | `false` | Multi-factor authentication |
+| `enableInvites` | `true` | Workspace invitations |
+| `enableMultipleWorkspaces` | `true` | Multiple workspace support |
+| `enableWorkspaceCreation` | `true` | Allow creating new workspaces |
+| `enableRateLimitUI` | `true` | Rate limit UI indicators |
+| `enableProfileEdit` | `true` | Profile editing |
+| `enableApiKeys` | `false` | API key management |
+
+## Notes
+
+- If the requested flag key doesn't exist in PostHog, the default value is returned
+- If PostHog is unavailable, the conservative default for that key is returned
+- Unknown flag keys return `enabled: false` as a safe default
+- The `variant` field is only populated for multivariate (A/B test) flags
+- Public flag values can still be personalized if a valid auth token is provided
+
+## Related Endpoints
+
+- [GET /flags](get_flags_all.mdx) - Get all feature flags
+
+```

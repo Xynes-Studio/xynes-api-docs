@@ -1,0 +1,120 @@
+```mdx
+---
+title: GET /flags
+description: API documentation for gateway.flags.getAll
+---
+
+# GET /flags
+
+**Action Key:** `gateway.flags.getAll`
+
+**Service:** `gateway`
+
+## Permissions
+
+� Public Access with Optional Authentication
+
+- **Without auth:** Returns public flags only (OAuth providers, maintenance mode)
+- **With valid JWT:** Returns all flags personalized for the user
+
+## Description
+
+Retrieve feature flags. This endpoint supports both authenticated and unauthenticated access:
+
+- **Unauthenticated requests** receive only public flags (e.g., OAuth provider availability, maintenance mode) - useful for login pages
+- **Authenticated requests** receive all flags personalized based on user context and workspace membership
+
+## Example Request
+
+### Unauthenticated (Public Flags)
+
+```bash
+curl -X GET "https://api.xynes.com/flags" \
+  -H "Content-Type: application/json"
+```
+
+### Authenticated (All Flags)
+
+```bash
+curl -X GET "https://api.xynes.com/flags" \
+  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>" \
+  -H "Content-Type: application/json"
+```
+
+## Headers
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `Authorization` | `string` | No | Bearer token in format `Bearer <token>`. Optional - if valid, returns personalized flags; if missing/invalid, returns public flags only |
+| `X-XS-Workspace-Id` | `string` | No | Workspace ID for context. Only used when authenticated |
+
+## Response
+
+### Success (200) - Authenticated
+
+```json
+{
+  "flags": {
+    "enableMFA": false,
+    "enableOAuthGoogle": true,
+    "enableOAuthGitHub": true,
+    "enableOAuthApple": false,
+    "enableInvites": true,
+    "enableMultipleWorkspaces": true,
+    "enableWorkspaceCreation": true,
+    "maintenanceMode": false,
+    "enableRateLimitUI": true,
+    "enablePasswordReset": true,
+    "enableProfileEdit": true
+  },
+  "authenticated": true
+}
+```
+
+### Success (200) - Unauthenticated (Public Flags Only)
+
+```json
+{
+  "flags": {
+    "enableOAuthGoogle": true,
+    "enableOAuthGitHub": true,
+    "enableOAuthApple": false,
+    "maintenanceMode": false,
+    "enablePasswordReset": true
+  },
+  "authenticated": false
+}
+```
+
+### Response Schema
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `flags` | `Record<string, boolean>` | Map of flag keys to their enabled state |
+| `authenticated` | `boolean` | Whether the request was authenticated |
+
+## Public Flags
+
+The following flags are always available without authentication:
+
+| Flag | Description |
+|------|-------------|
+| `enableOAuthGoogle` | Google OAuth login availability |
+| `enableOAuthGitHub` | GitHub OAuth login availability |
+| `enableOAuthApple` | Apple OAuth login availability |
+| `maintenanceMode` | Whether the system is in maintenance mode |
+| `enablePasswordReset` | Password reset functionality availability |
+
+## Notes
+
+- This endpoint never returns 401 - invalid/missing tokens result in public flags only
+- Flags are evaluated per-user using PostHog as the backend provider
+- If PostHog is unavailable, conservative default values are returned
+- Workspace context is automatically extracted from the JWT token or header when available
+- Response is cacheable for short durations (client-side)
+
+## Related Endpoints
+
+- [GET /flags/:key](get_flags_byKey.mdx) - Get a single feature flag
+
+```
