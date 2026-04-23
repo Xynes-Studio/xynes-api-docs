@@ -331,11 +331,13 @@ curl -X POST "https://api.xynes.com/workspaces/550e8400-e29b-41d4-a716-446655440
 
 | Status | Code | Description |
 |--------|------|-------------|
-| `403` | `CONTENT_TYPE_ACCESS_DENIED` | Content type doesn't belong to workspace |
+| `403` | `CONTENT_TYPE_ACCESS_DENIED` | Legacy blog content-type mapping is not accessible in workspace |
 | `400` | `VALIDATION_ERROR` | Invalid payload |
 
 #### Action Key
 `cms.blog_entry.create`
+
+> Compatibility note: `cms.blog_entry.*` endpoints are legacy template/content-type flows. Directory-first dashboard authoring should use `cms.entry.*` endpoints.
 
 ---
 
