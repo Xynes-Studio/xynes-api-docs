@@ -253,5 +253,5 @@ The following flags are available by default. When PostHog is unavailable, these
 
 ## Related Documentation
 
-- [DEVELOPER.md](../../xynes-gateway/DEVELOPER.md) - Gateway development guide
+- [DEVELOPER.md](https://github.com/Xynes-Studio/xynes-gateway/blob/9849ff727c8b4c6865f44077ed02b6818307188f/DEVELOPER.md) - Gateway development guide
 - [PostHog Feature Flags](https://posthog.com/docs/feature-flags) - Upstream provider docs
